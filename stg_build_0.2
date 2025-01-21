@@ -1,0 +1,136 @@
+# Simple text-based adventure game
+# Goal of the game: go through the adventure, complete quests, and make choices.
+
+# Import necessary modules
+import time
+import random
+
+# Function for a pause to add realism
+def pause(seconds):
+    time.sleep(seconds)
+
+# Player class
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.health = 100
+        self.gold = 0
+        self.inventory = []
+
+    def show_status(self):
+        print(f"\nPlayer: {self.name}")
+        print(f"Health: {self.health}")
+        print(f"Gold: {self.gold}")
+        print(f"Inventory: {', '.join(self.inventory) if self.inventory else 'empty'}\n")
+
+# Function to display the story
+
+def print_story(text):
+    for line in text.split("\n"):
+        print(line)
+        pause(1)
+
+# Function for fighting an enemy
+def fight(player, enemy):
+    print(f"\nYou engage in a fight with {enemy['name']}!")
+    while player.health > 0 and enemy['health'] > 0:
+        print("\nYour turn.")
+        print("1. Attack")
+        print("2. Defend")
+        choice = input("Choose an action (1 or 2): ")
+
+        if choice == "1":
+            damage = random.randint(10, 20)
+            enemy['health'] -= damage
+            print(f"You dealt {damage} damage to {enemy['name']}.")
+        elif choice == "2":
+            print("You took a defensive stance and received less damage.")
+            player.health -= max(0, enemy['damage'] - 5)
+        else:
+            print("Invalid choice! The enemy attacks!")
+
+        if enemy['health'] > 0:
+            enemy_damage = random.randint(5, enemy['damage'])
+            player.health -= enemy_damage
+            print(f"{enemy['name']} dealt {enemy_damage} damage to you.")
+
+        if player.health <= 0:
+            print("\nYou lost the fight...")
+            return False
+
+        if enemy['health'] <= 0:
+            print(f"\nYou defeated {enemy['name']}!")
+            return True
+
+    return True
+
+# Function to start the game
+def start_game():
+    print("Welcome to the text-based adventure game!")
+    name = input("Enter your character's name: ")
+    player = Player(name)
+
+    print(f"\nHello, {player.name}! Your adventure begins!\n")
+
+    print_story("""
+    You find yourself in a small village surrounded by a forest.
+    Villagers are talking about a mysterious monster that has attacked their homes.
+    """)
+
+    # Main quest
+    print("1. Help the villagers deal with the monster.")
+    print("2. Ignore their request and move on.")
+    choice = input("Your choice (1 or 2): ")
+
+    if choice == "1":
+        print_story("\nYou decided to help the village. The villagers point you to the path leading to the monster's cave.")
+        pause(2)
+
+        # Fight with the monster
+        monster = {"name": "Fierce Wolf", "health": 50, "damage": 15}
+        if fight(player, monster):
+            print("\nThe villagers thank you for your help and reward you with 50 gold.")
+            player.gold += 50
+            player.inventory.append("Magic Amulet")
+        else:
+            print("\nYou failed. Try again!")
+            return
+
+    elif choice == "2":
+        print_story("\nYou decided to leave the villagers and continue on your way.")
+    else:
+        print("Invalid choice. Game over.")
+        return
+
+    # Second stage
+    print_story("""
+    After the events in the village, you continue your journey.
+    Along the way, you find a chest.
+    """)
+    print("1. Open the chest.")
+    print("2. Walk past it.")
+    choice = input("Your choice (1 or 2): ")
+
+    if choice == "1":
+        reward = random.choice(["sword", "health potion", "nothing"])
+        if reward == "nothing":
+            print("\nThe chest was empty!")
+        else:
+            print(f"\nYou found {reward} in the chest!")
+            player.inventory.append(reward)
+    elif choice == "2":
+        print("\nYou decided not to open the chest and moved on.")
+    else:
+        print("Invalid choice. Game over.")
+        return
+
+    # Ending
+    print_story("""
+    Your adventure comes to an end. You successfully overcame challenges and learned a lot.
+    """)
+    player.show_status()
+    print("Thank you for playing!")
+
+# Run the game
+if __name__ == "__main__":
+    start_game()
