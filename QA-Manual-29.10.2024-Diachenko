@@ -1,4 +1,4 @@
-hello world
+biuld_0.2
 # Simple text-based adventure game
 # Goal of the game: go through the adventure, complete quests, and make choices.
 
@@ -125,30 +125,9 @@ def start_game():
         print("Invalid choice. Game over.")
         return
 
-    # Third stage
-    print_story("""
-    As you move deeper into the forest, you encounter a crossroads.
-    """)
-    print("1. Take the left path towards the mountains.")
-    print("2. Take the right path towards the river.")
-    choice = input("Your choice (1 or 2): ")
-
-    if choice == "1":
-        print_story("\nYou travel towards the mountains and find a hidden cave filled with treasures.")
-        print("You gain 100 gold and a rare gemstone.")
-        player.gold += 100
-        player.inventory.append("Rare Gemstone")
-    elif choice == "2":
-        print_story("\nYou follow the river and find a small fishing village.")
-        print("The villagers reward you with a golden fishing rod for helping them.")
-        player.inventory.append("Golden Fishing Rod")
-    else:
-        print("Invalid choice. Game over.")
-        return
-
     # Ending
     print_story("""
-    Your adventure comes to an end. You successfully overcame challenges and gained valuable rewards.
+    Your adventure comes to an end. You successfully overcame challenges and learned a lot.
     """)
     player.show_status()
     print("Thank you for playing!")
